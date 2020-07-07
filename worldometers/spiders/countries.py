@@ -6,11 +6,13 @@ class CountriesSpider(scrapy.Spider):
     allowed_domains = ['www.worldometers.info/']
     start_urls = ['https://www.worldometers.info/world-population/population-by-country/']
 
-    def parse(self, response):
-        title = response.xpath("//h1/text()").get()
-        countries = response.xpath("//td/a/text()").getall()
+    def parse(self, response):    
+        countries = response.xpath("//td/a")
+        for country in countries:
+            name = country.xpath('.//text()').get()     #using .// intro selector
+            link = country.xpath('.//@href')
 
-        yield {
-            'title': title,
-            'countries': countries
-        }
+            yield {
+                'country_name': name,
+                'country_link': link
+            }
